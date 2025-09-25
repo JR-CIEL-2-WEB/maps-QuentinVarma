@@ -1,20 +1,22 @@
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Parcourir un tableau indicé</title>
-	</head>
+
+<head>
+	<meta charset="utf-8">
+	<title>Parcourir un tableau indicé</title>
+</head>
+
 <body>
 
-<h1>Tableau associatif en javascript</h1>
-<hr>
-<div id="demo">
-	<button id = "Button1"> ok </button>
-	
-</div>
+	<h1>Tableau associatif en javascript</h1>
+	<hr>
+	<div id="demo">
+		<button id="Button1"> ok </button>
 
-<script type="text/javascript">
-		var CD = `
+	</div>
+
+	<script type="text/javascript">
+		var CD = JSON.parse(`
 					{
 						"TITLE": "Empire Burlesque",
 						"ARTIST": "Bob Dylan",
@@ -24,15 +26,21 @@
 						"YEAR": "1985"
 					}
 				`
-	
-	var i;
-	document.getElementById("Button1").addEventListener('click',readTab);
+				);
+		var i;
+		document.getElementById("Button1").addEventListener('click', readTab);
 
-	function readTab(){
-				//TODO
-	}
-  
-</script>
+		function readTab() {
+			let text ="";
+			for (const i in CD){
+				text = i+ ":"+ CD[i];   //i = valeur et CD[i] = clé 
+				console.log(text)
+			}
+
+		}
+
+	</script>
 
 </body>
+
 </html>
