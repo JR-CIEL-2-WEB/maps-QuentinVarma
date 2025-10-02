@@ -9,16 +9,17 @@
 
 <h1>JRostand Reperes Stade</h1>
 <hr>
-<div id="map">...</div>
+<div id="map"></div>
+
 
 <script   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Y32T_PJHZxYcK3BJYJFNwSl6cuvLXpo&callback=initMap"></script>
 <script  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
     // au chargement de la page
-    //window.onload = loadDoc();
+    window.onload = loadDoc;
     // when page is ready, initialize the map!
-    google.maps.event.addDomListener(window, 'load', loadDoc());
+    google.maps.event.addDomListener(window, 'load', loadDoc);
     var markers;
 
     // Ajax avec JQuery
@@ -50,10 +51,9 @@
            mapTypeId: google.maps.MapTypeId.ROADMAP
        };
 
-       /*
-           Constructeur de la map qui prend en paramêtre le conteneur HTML
-           dans lequel la map doit s'afficher et les options
-       */
+
+        /*****   Markers  *****/
+
        var map = new google.maps.Map(document.getElementById("map"), options);
 
        // On positionne les marqueurs sur la carte
@@ -65,7 +65,6 @@
            });
        }
     }
-
 
 </script>
 

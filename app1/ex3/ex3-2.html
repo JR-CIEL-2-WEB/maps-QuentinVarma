@@ -3,12 +3,13 @@
 <head>
     <meta charset="utf-8">
     <title>JRostand stade reperes</title>
+    <link rel="stylesheet" type="text/css" href="./style.css" />
 </head>
 <body>
 
 <h1>JRostand Reperes Stade</h1>
 <hr>
-<div id="map">...</div>
+<div id="map"></div>
 
 
 <script   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Y32T_PJHZxYcK3BJYJFNwSl6cuvLXpo&callback=initMap"></script>
@@ -16,31 +17,29 @@
 <script>
 
     // au chargement de la page
-    //window.onload = loadDoc();
+    window.onload = loadDoc;
     // when page is ready, initialize the map!
-    google.maps.event.addDomListener(window, 'load', loadDoc());
+    google.maps.event.addDomListener(window, 'load', loadDoc);
     var markers;
 
-    // Ajax avec JQuery
-    function loadDoc() {
-        $.ajax({
-                url: "markersJrostand.json",
-                method: "GET",
-                //data: { id : menuId },
-                dataType: "json",
-                success: function(dataMarkers){
-                            markers = dataMarkers;
-                            for(let i = 0; i < markers.length;i++){
-                                let marker = markers[i];
-                                for(key in markers[i]){
-                                    console.log(key + ":" + marker[key]);
-                                }
-                                console.log("____________");
-                            }
-                            initMap();
-                        }
-            }
-        );
+    // Utilisation de fetch
+    async function loadDoc() {
+        try {
+            const response = await fetch('markersJrostand.json');
+            markers = await response.json();
+            
+            // Afficher les coordonnées dans la console
+            markers.forEach((marker, index) => {
+                console.log(`Marqueur ${index + 1}:`);
+                console.log(`Latitude: ${marker.lat}`);
+                console.log(`Longitude: ${marker.lng}`);
+                console.log("____________");
+            });
+            
+            initMap();
+        } catch (error) {
+            console.error("Erreur lors du chargement des données:", error);
+        }
     }
 
    function initMap(){
@@ -56,13 +55,30 @@
        var map = new google.maps.Map(document.getElementById("map"), options);
 
        // On positionne les marqueurs sur la carte
-       for (let i = 0; i < markers.length; i++) {
-           let latlng = markers[i];
-           new google.maps.Marker({
+       markers.forEach((latlng, index) => {
+           // Créer le marqueur
+           const marker = new google.maps.Marker({
                position: latlng,
-               map : map
+               map: map,
+               title: `Marqueur ${index + 1}`
            });
-       }
+
+           // Créer l'InfoWindow pour ce marqueur
+           const infowindow = new google.maps.InfoWindow({
+               content: `Le marqueur ${index + 1} a été cliqué.`
+           });
+
+           // Ajouter l'événement click sur le marqueur
+           marker.addListener('click', () => {
+               // Fermer toutes les autres infobulles ouvertes
+               markers.forEach(m => m.infowindow?.close());
+               // Ouvrir l'infobulle de ce marqueur
+               infowindow.open(map, marker);
+           });
+
+           // Stocker l'infowindow dans le marqueur pour pouvoir la fermer plus tard
+           marker.infowindow = infowindow;
+       });
 
        /**** Polylines *****/
        const flightPath = new google.maps.Polyline({
